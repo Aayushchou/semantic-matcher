@@ -5,12 +5,13 @@ Module defines the main search and semantic parsing functionality.
 """
 
 import faiss
+import pandas as pd
 
 from sentence_transformers import SentenceTransformer
 from typing import List
 
 
-def semantic_search(queries: List[str], 
+def semantic_search_1d(queries: List[str], 
                     documents: List[str], 
                     model_name='all-MiniLM-L6-v2', 
                     num_matches=2):
@@ -40,6 +41,32 @@ def semantic_search(queries: List[str],
     return scores, indices
 
 
+def semantic_search_df(df1, df2, model_name='all-MiniLM-L6-v2', num_matches=2):
+    try: 
+        # Load the SentenceTransformer model and generate embeddings for the values in the columns
+        model = SentenceTransformer(model_name)
+        df1_embeddings = model.encode(df1.values.flatten())
+        df2_embeddings = model.encode(df2.values.flatten())
+    except TypeError as e:
+        print(e)
+        raise TypeError("Please ensure you are providing only categorical or text columns")
+
+    # Reshape the embeddings back into a 2D matrix, with one row per column and one column per embedding dimension
+    df1_embeddings = df1_embeddings.reshape((df1.shape[1], -1))
+    df2_embeddings = df2_embeddings.reshape((df2.shape[1], -1))
+
+    # Initialize a FAISS index and add the df2 embeddings to it
+    d = df1_embeddings.shape[1]
+    index = faiss.IndexFlatIP(d)
+    index.add(df2_embeddings)
+
+
+    # Search for the most similar columns in df2 for each df1 column
+    scores, indices = index.search(df1_embeddings, num_matches)
+    return scores, indices
+
+
 if __name__ == '__main__':
-    scores, indices = semantic_search(["I like tomatoes", "tomato", "ketchup"], ["I like tomatoes", "I like potatoes"])
-    breakpoint()
+    #scores, indices = semantic_search(["I like tomatoes", "tomato", "ketchup"], ["I like tomatoes", "I like potatoes"])
+    #breakpoint()
+    dfa = pd.read_csv("data/titanic.csv")
