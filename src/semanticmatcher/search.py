@@ -41,7 +41,10 @@ def semantic_search_1d(queries: List[str],
     return scores, indices
 
 
-def semantic_search_df(df1, df2, model_name='all-MiniLM-L6-v2', num_matches=2):
+def semantic_search_df(df1: pd.DataFrame, 
+                       df2: pd.DataFrame, 
+                       model_name: str = 'all-MiniLM-L6-v2',
+                       num_matches: int=2):
     try: 
         # Load the SentenceTransformer model and generate embeddings for the values in the columns
         model = SentenceTransformer(model_name)
