@@ -32,6 +32,28 @@ scores, indices = semantic_search(query, corpus)
 
 ```
 
+Additionally, the package can also be used to determine the similarity between two tables. It returns a matrix that compares each column.
+
+```python
+df1 = pd.DataFrame(
+        {
+            "col1": ["hello", "world"], 
+            "col2": ["how", "are"], 
+            "col3": ["you", "doing"]
+         }
+    )
+    
+df2 = pd.DataFrame(
+        {
+            "col1": ["hola", "mundo"],
+            "col2": ["como", "estas"],
+            "col3": ["tu", "haciendo"],
+        }
+    )
+
+similarity_matrix_df = similarity_matrix(df1, df2)
+```
+
 By default, the following sentence transformer model is used to encode the text: "all-MiniLM-L6-v2".
 
 ## 3. Next Steps
