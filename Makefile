@@ -4,7 +4,8 @@ test:
 install: 
 	python3 -m pip install . 
 
-install-dev: 
+install-dev:
+	python3 -m pip install -e .
 	python3 -m pip install -e .[dev]
 	python3 -m pip install -e .[test]
 
