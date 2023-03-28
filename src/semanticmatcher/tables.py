@@ -13,17 +13,16 @@ Tables are expected to be inputted as pandas dataframes with text or categorical
 import pandas as pd
 from semanticmatcher.search import semantic_search_df
 
-def column_search(df1: pd.DataFrame, 
-                  df2: pd.DataFrame, 
-                  num_matches: int=2):
+
+def column_search(df1: pd.DataFrame, df2: pd.DataFrame, num_matches: int = 2):
     """
     Get n best matches between the columns of two dataframes.
-    
-    Args: 
+
+    Args:
         df1 - The query dataframe
         df2 - The corpus dataframe
         num_matches - The number of matches we want to find
-    Returns: 
+    Returns:
         results_df - Dataframe with two columns, one with the column name from df1,
                     and another column containing a list of n closest matches.
     """
@@ -33,21 +32,22 @@ def column_search(df1: pd.DataFrame,
         results[col] = [df2.columns[idx] for idx in indices[i]]
 
     # Create a new DataFrame to display the results
-    results_df = pd.DataFrame(results.items(), columns=['df1_column', 'df2_similar_columns'])
+    results_df = pd.DataFrame(
+        results.items(), columns=["df1_column", "df2_similar_columns"]
+    )
     return results_df
 
 
-def similarity_matrix(df1: pd.DataFrame, 
-                      df2: pd.DataFrame): 
+def similarity_matrix(df1: pd.DataFrame, df2: pd.DataFrame):
     """
-    Get a similarity matrix containing similarity values between all columns in a dataframe. 
-    A higher value represents a stronger match. 
+    Get a similarity matrix containing similarity values between all columns in a dataframe.
+    A higher value represents a stronger match.
 
-    Args: 
+    Args:
         df1 - The query dataframe
         df2 - The corpus dataframe
         num_matches - The number of matches we want to find
-    Returns: 
+    Returns:
         similarity_matrix - Matrix dataframe containing the similarity between columns from each dataframe.
     """
 
@@ -59,7 +59,8 @@ def similarity_matrix(df1: pd.DataFrame,
     # Display the similarity matrix
     return similarity_matrix
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     df = pd.read_csv("data/titanic.csv")
     df = df[["Lname", "Name", "Sex"]]
     res = similarity_matrix(df, df)
