@@ -28,7 +28,7 @@ jobs:
       - name: Set up requirements
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install -e .
+          make install-dev
 
       - name: Run tests
         run: |
