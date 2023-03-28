@@ -7,3 +7,6 @@ install:
 install-dev: 
 	python3 -m pip install -e .[dev]
 
+precommit: 
+	python3 -m black .
+

@@ -1,0 +1,35 @@
+name: Unit Tests
+
+on: 
+
+  push:
+    branches: [main]
+  
+  pull_request:
+    branches: [main]
+
+
+  workflow_dispath:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      - name: Set up requirements
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -e .
+
+      - name: Run tests
+        run: |
+          python3 -m pytest --import-mode=append tests/
