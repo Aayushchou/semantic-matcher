@@ -9,9 +9,9 @@ import pandas as pd
 
 from sentence_transformers import SentenceTransformer
 from typing import List
+from huggingface_hub.utils import RepositoryNotFoundError
 
-
-def semantic_search_1d(queries: List[str], 
+def semantic_search(queries: List[str], 
                     documents: List[str], 
                     model_name='all-MiniLM-L6-v2', 
                     num_matches=2):
@@ -29,6 +29,9 @@ def semantic_search_1d(queries: List[str],
         indices - Matrix with "num_queries" rows and "num_matches" columns. 
                  The value is the index of the document sorted by closest match
     """
+    if (not queries) or (not documents): 
+        raise ValueError("Empty queries and/or documents lists")
+
     model = SentenceTransformer(model_name)
     query_embeddings = model.encode(queries)
     doc_embeddings = model.encode(documents)
@@ -45,14 +48,17 @@ def semantic_search_df(df1: pd.DataFrame,
                        df2: pd.DataFrame, 
                        model_name: str = 'all-MiniLM-L6-v2',
                        num_matches: int=2):
+    if (df1.empty) or (df2.empty): 
+        raise ValueError("One or both tables are empty")
     try: 
         # Load the SentenceTransformer model and generate embeddings for the values in the columns
         model = SentenceTransformer(model_name)
         df1_embeddings = model.encode(df1.values.flatten())
         df2_embeddings = model.encode(df2.values.flatten())
-    except TypeError as e:
-        print(e)
+    except IndexError as e:
         raise TypeError("Please ensure you are providing only categorical or text columns")
+    except RepositoryNotFoundError as e:
+        raise ValueError("Sentence transformer model does not exist")
 
     # Reshape the embeddings back into a 2D matrix, with one row per column and one column per embedding dimension
     df1_embeddings = df1_embeddings.reshape((df1.shape[1], -1))

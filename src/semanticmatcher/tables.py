@@ -62,5 +62,5 @@ def similarity_matrix(df1: pd.DataFrame,
 if __name__ == '__main__':
     df = pd.read_csv("data/titanic.csv")
     df = df[["Lname", "Name", "Sex"]]
-    res = column_search(df, df, 2)
+    res = similarity_matrix(df, df)
     breakpoint()
