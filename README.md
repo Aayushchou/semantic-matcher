@@ -8,3 +8,32 @@ In its current state, it has two main uses:
 
 * Find the closest matches of a user query to a text corpus, using sentence transformer encodings and FAISS for optimization.
 * Measure the semantic similarity between two tables and determine common columns. Useful for detecting duplicates and determining which columns to join on.
+
+
+## 1. Installation
+
+This package can be installed after cloning by running "make install". Alternatively it can be installed using pip: 
+
+```
+pip install semanticmatcher
+```
+
+## 2. Usage: 
+
+This package can be used to simply search for a query within a text corpus. 
+
+```python
+from semanticmatcher.search import semantic_search
+
+query = ["boy jumping"]
+corpus = ["There was a young man running around town", "The mayor is looking for a new house", "I had pasta for dinner"]
+
+scores, indices = semantic_search(query, corpus)
+
+```
+
+By default, the following sentence transformer model is used to encode the text: "all-MiniLM-L6-v2".
+
+## 3. Next Steps
+
+Add functionality to allow users to join two tables on a column, depending on the similarity match between the columns. 
