@@ -17,6 +17,7 @@ def semantic_search(
     documents: List[str],
     model_name="all-MiniLM-L6-v2",
     num_matches=2,
+    normalise=True,
 ):
     """
     Function to perform semantic search on a set of queries and documents.
@@ -38,12 +39,15 @@ def semantic_search(
     model = SentenceTransformer(model_name)
     query_embeddings = model.encode(queries)
     doc_embeddings = model.encode(documents)
-
     num_queries = query_embeddings.shape[1]
+    if normalise:
+        faiss.normalize_L2(doc_embeddings)
+        faiss.normalize_L2(query_embeddings)
+
     index = faiss.IndexFlatIP(num_queries)
     index.add(doc_embeddings)
-
     scores, indices = index.search(query_embeddings, num_matches)
+    breakpoint()
     return scores, indices
 
 
@@ -82,6 +86,6 @@ def semantic_search_df(
 
 
 if __name__ == "__main__":
-    # scores, indices = semantic_search(["I like tomatoes", "tomato", "ketchup"], ["I like tomatoes", "I like potatoes"])
-    # breakpoint()
-    dfa = pd.read_csv("data/titanic.csv")
+    scores, indices = semantic_search(["I like tomatoes", "tomato", "I like ketchup"], ["I like tomatoes", "I like potatoes"])
+    #breakpoint()
+    #dfa = pd.read_csv("data/titanic.csv")
