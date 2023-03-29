@@ -15,9 +15,9 @@ from huggingface_hub.utils import RepositoryNotFoundError
 def semantic_search(
     queries: List[str],
     documents: List[str],
-    model_name="all-MiniLM-L6-v2",
-    num_matches=2,
-    normalise=True,
+    model_name: str = "all-MiniLM-L6-v2",
+    num_matches: int = 2,
+    normalise: bool = True,
 ):
     """
     Function to perform semantic search on a set of queries and documents.
@@ -55,6 +55,7 @@ def semantic_search_df(
     df2: pd.DataFrame,
     model_name: str = "all-MiniLM-L6-v2",
     num_matches: int = 2,
+    normalise: bool = True
 ):
     if (df1.empty) or (df2.empty):
         raise ValueError("One or both tables are empty")
@@ -74,6 +75,10 @@ def semantic_search_df(
     df1_embeddings = df1_embeddings.reshape((df1.shape[1], -1))
     df2_embeddings = df2_embeddings.reshape((df2.shape[1], -1))
 
+    if normalise:
+        faiss.normalize_L2(df1_embeddings)
+        faiss.normalize_L2(df2_embeddings)
+        
     # Initialize a FAISS index and add the df2 embeddings to it
     d = df1_embeddings.shape[1]
     index = faiss.IndexFlatIP(d)
