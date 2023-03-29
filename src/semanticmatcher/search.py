@@ -47,7 +47,6 @@ def semantic_search(
     index = faiss.IndexFlatIP(num_queries)
     index.add(doc_embeddings)
     scores, indices = index.search(query_embeddings, num_matches)
-    breakpoint()
     return scores, indices
 
 
@@ -86,6 +85,6 @@ def semantic_search_df(
 
 
 if __name__ == "__main__":
-    scores, indices = semantic_search(["I like tomatoes", "tomato", "I like ketchup"], ["I like tomatoes", "I like potatoes"])
+    scores, indices = semantic_search(["I like tomatoes", "tomato", "ketchup"], ["I like tomatoes", "I like potatoes"])
     #breakpoint()
     #dfa = pd.read_csv("data/titanic.csv")
